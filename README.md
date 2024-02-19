@@ -3,7 +3,7 @@
 This repository contains a REST API implemented in Go using the Gin framework. The API follows a layered structure organized into repositories, services, and controllers (handlers), aiming to enhance scalability and maintainability of the codebase.
 
 ### Features
-- Robust and reliable controllers tested extensively using libraries like Testify.
+- Robust and reliable handlers tested extensively using libraries like Testify.
 - Thorough documentation of the API provided through Swagger, ensuring clear guidelines for usage and future development.
 - Majority of the codebase boasts test coverage exceeding 80%, guaranteeing high quality and reliability.
 
@@ -12,7 +12,7 @@ To get started with this API, follow these steps:
 
 1. Clone the repository: 
    ```bash
-   git clone https://github.com/your-username/apiGo.git
+   git clone https://github.com/davidop97/apiGo.git
    ```
 2. Install dependencies:
    ```bash
@@ -20,7 +20,7 @@ To get started with this API, follow these steps:
    ```
 3. Run the application:
    ```bash
-   go run main.go
+   go run cmd/server/main.go
    ```
 
 For more detailed instructions and API documentation, refer to the Swagger documentation provided.
