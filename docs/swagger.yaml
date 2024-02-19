@@ -1,0 +1,1542 @@
+definitions:
+  domain.Buyer:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+    type: object
+  domain.Locality:
+    properties:
+      country_name:
+        type: string
+      id:
+        type: integer
+      locality_name:
+        type: string
+      postal_code:
+        type: integer
+      province_name:
+        type: string
+    type: object
+  domain.Product:
+    properties:
+      description:
+        type: string
+      expiration_rate:
+        type: number
+      freezing_rate:
+        type: number
+      height:
+        type: number
+      id:
+        type: integer
+      length:
+        type: number
+      netweight:
+        type: number
+      product_code:
+        type: string
+      product_type_id:
+        type: integer
+      recommended_freezing_temperature:
+        type: number
+      seller_id:
+        type: integer
+      width:
+        type: number
+    type: object
+  domain.ProductRecord:
+    properties:
+      id:
+        type: integer
+      last_update_date:
+        type: string
+      product_id:
+        description: Product_code of the product (fk)
+        type: integer
+      purchase_price:
+        type: number
+      sale_price:
+        type: number
+    type: object
+  domain.ProductRecordCreate:
+    properties:
+      last_update_date:
+        type: string
+      product_id:
+        description: Product_code of the product (fk)
+        type: integer
+      purchase_price:
+        type: number
+      sale_price:
+        type: number
+    type: object
+  domain.ProductRecordGet:
+    properties:
+      description:
+        type: string
+      product_id:
+        description: Product_code of the product (fk)
+        type: integer
+      record_count:
+        description: count of records
+        type: integer
+    type: object
+  domain.ReportSellers:
+    properties:
+      locality_id:
+        type: integer
+      locality_name:
+        type: string
+      postal_code:
+        type: integer
+      sellers_count:
+        type: integer
+    type: object
+  domain.Seller:
+    properties:
+      address:
+        type: string
+      cid:
+        type: integer
+      company_name:
+        type: string
+      id:
+        type: integer
+      locality_id:
+        type: integer
+      telephone:
+        type: string
+    type: object
+  handler.Employee:
+    type: object
+  handler.InboudOrderRequest:
+    properties:
+      employee_id:
+        type: integer
+      id:
+        type: integer
+      order_date:
+        type: string
+      order_number:
+        type: string
+      product_batch_id:
+        type: integer
+      warehouse_id:
+        type: integer
+    type: object
+  handler.Request:
+    properties:
+      card_number_id:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+    type: object
+  handler.RequestBodyPurchaseCreate:
+    properties:
+      buyer_id:
+        type: integer
+      order_date:
+        type: string
+      order_number:
+        type: string
+      order_status_id:
+        type: integer
+      product_record_id:
+        type: integer
+      tracking_code:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  handler.Warehouse:
+    type: object
+host: localhost:8080/api/v1
+info:
+  contact: {}
+  description: This API manage many products of any company.
+  title: API GO
+  version: "1.0"
+paths:
+  /buyers:
+    get:
+      description: get all buyers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      tags:
+      - domain.Buyer
+      - buyers
+    post:
+      consumes:
+      - application/json
+      description: create a buyer
+      parameters:
+      - description: Buyer body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Buyer'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties: true
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      tags:
+      - domain.Buyer
+      - buyers
+  /buyers/{id}:
+    delete:
+      description: delete a buyer
+      parameters:
+      - description: Delete buyer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      tags:
+      - domain.Buyer
+      - buyers
+    get:
+      description: get a buyer
+      parameters:
+      - description: Buyer id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      tags:
+      - domain.Buyer
+      - buyers
+    patch:
+      consumes:
+      - application/json
+      description: Update a buyer
+      parameters:
+      - description: Update buyer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Buyer update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a buyer
+      tags:
+      - domain.Buyer
+      - buyers
+  /buyers/reportPurchaseOrders/:
+    get:
+      description: get a buyer
+      parameters:
+      - description: Purchase Orders By Buyer id
+        in: query
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "204":
+          description: No Content
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      tags:
+      - purchase_orders
+  /carries:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get all carries, returns empty list if there are no carries.
+      tags:
+      - carries
+    post:
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Save a carry, returns error if the carry already exists or if the data
+        is incorrect.
+      tags:
+      - carries
+  /carries/locality:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get all carries by locality, returns empty list if there are no carries.
+      tags:
+      - carries
+  /employees:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: Get all the employees available or an error if the list is empty.
+      tags:
+      - domain.Employee
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Struct of Employee domain
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.Employee'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "409":
+          description: Conflict
+        "422":
+          description: Unprocessable Entity
+      summary: Create a new ∂ employee or return an error if the new employee has
+        invalid
+      tags:
+      - domain.Employee
+  /employees/{id}:
+    delete:
+      parameters:
+      - description: id from the employee
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      summary: Delete a employee using its id or return an error if that employee
+        not exist.
+      tags:
+      - domain.Employee
+    get:
+      parameters:
+      - description: id from the employee
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: Get a employee by id or an error if that id not exists.
+      tags:
+      - domain.Employee
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: id from the employee
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: Update employee or return an error if that employee not exist, or has
+        invalid format.
+      tags:
+      - domain.Employee
+  /employees/reportInboundOrder:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get all reports with inboudOrders
+      tags:
+      - inboundOrders
+  /employees/reportInboundOrders:
+    get:
+      description: get inbound orders
+      parameters:
+      - description: Inbound Orders By Employee id
+        in: query
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      tags:
+      - inboundOrders
+  /inboundOrders:
+    post:
+      parameters:
+      - description: Inbound orders body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.InboudOrderRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties: true
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create new inboundOrder
+      tags:
+      - inboundOrders
+  /localities:
+    get:
+      description: Get all the localities available or an error if the list is empty
+        or an internal error occurs.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of all localities
+          schema:
+            items:
+              $ref: '#/definitions/domain.Locality'
+            type: array
+        "404":
+          description: Localities not found
+          schema:
+            type: string
+        "500":
+          description: Server Internal error
+          schema:
+            type: string
+      summary: Get all the localities available.
+      tags:
+      - domain.Locality
+    post:
+      description: Create a new locality or an error if that locality cannot be created
+        or an internal error occurs.
+      parameters:
+      - description: Struct of Locality domain
+        in: body
+        name: Locality
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Locality'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: New Locality created
+          schema:
+            $ref: '#/definitions/domain.Locality'
+        "409":
+          description: locality already exists
+          schema:
+            type: string
+        "422":
+          description: invalid or missing field
+          schema:
+            type: string
+        "500":
+          description: Server Internal error
+          schema:
+            type: string
+      summary: Create a new locality or an error if that locality cannot be created.
+      tags:
+      - domain.Locality
+  /localities/reportSellers:
+    get:
+      description: Get a report of sellers by locality using its id. Or show all the
+        sellers of all the localities if the id is not provided.
+      parameters:
+      - description: locality id
+        in: query
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Report of sellers by locality
+          schema:
+            $ref: '#/definitions/domain.ReportSellers'
+        "400":
+          description: error getting the report for the requested ID. Id must be greater
+            than 0
+          schema:
+            type: string
+        "404":
+          description: sellers not found for the requested ID
+          schema:
+            type: string
+        "500":
+          description: server internal error
+          schema:
+            type: string
+      summary: Get a report of sellers by locality.
+      tags:
+      - domain.Locality
+  /locality/{id}:
+    get:
+      description: Get a locality by id or an error if that id not exists or an internal
+        error occurs.
+      parameters:
+      - description: id from the locality
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Locality requested
+          schema:
+            $ref: '#/definitions/domain.Locality'
+        "400":
+          description: invalid id
+          schema:
+            type: string
+        "404":
+          description: Locality not found
+          schema:
+            type: string
+        "500":
+          description: Server Internal error
+          schema:
+            type: string
+      summary: Get a locality by id or an error if that id not exists.
+      tags:
+      - domain.Locality
+  /ping:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Responds with a pong message.
+      tags:
+      - domain.Product
+      - ping
+      - domain.Product
+  /productBatches:
+    get:
+      description: Gets a list of all product batches.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Retrieves all product batches.
+      tags:
+      - productBatches
+    post:
+      consumes:
+      - application/json
+      description: Creates a new product batch based on the provided data.
+      parameters:
+      - description: Product batch data to create
+        format: json
+        in: body
+        name: sectionData
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties: true
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Creates a new product batch.
+      tags:
+      - productBatches
+  /productrecord:
+    get:
+      parameters:
+      - description: Product ID
+        in: query
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.ProductRecordGet'
+            type: array
+        "404":
+          description: Product Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Retrieves product records by product ID or all product records if idProduct
+        is 0.
+      tags:
+      - productrecords
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product Record to be created
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ProductRecordCreate'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.ProductRecord'
+        "422":
+          description: Invalid JSON
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Creates a new product record.
+      tags:
+      - productrecords
+  /products:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of all products
+          schema:
+            $ref: '#/definitions/domain.Product'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Retrieves a list of all products.
+      tags:
+      - products
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product to be created
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Product'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created product data
+          schema:
+            $ref: '#/definitions/domain.Product'
+        "400":
+          description: Invalid JSON
+          schema:
+            type: string
+        "422":
+          description: Invalid JSON
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Creates a new product.
+      tags:
+      - products
+  /products/{id}:
+    delete:
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Product Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Deletes a product by ID.
+      tags:
+      - products
+    get:
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product data
+          schema:
+            $ref: '#/definitions/domain.Product'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Product Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Retrieves a product by ID.
+      tags:
+      - products
+      - domain.Product
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated product object
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated product data
+          schema:
+            $ref: '#/definitions/domain.Product'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Product Not Found
+          schema:
+            type: string
+        "422":
+          description: Invalid JSON
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Updates an existing product by ID.
+      tags:
+      - products
+  /purchaseOrders:
+    post:
+      description: create a new purchase order
+      parameters:
+      - description: Purchase orders body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.RequestBodyPurchaseCreate'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties: true
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      tags:
+      - purchase_orders
+  /sections:
+    get:
+      description: Gets a list of all the sections.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Retrieves all sections.
+      tags:
+      - sections
+    post:
+      consumes:
+      - application/json
+      description: Creates a new section based on the provided data.
+      parameters:
+      - description: Section data to create
+        format: json
+        in: body
+        name: sectionData
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties: true
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Creates a new section.
+      tags:
+      - sections
+  /sections/{id}:
+    delete:
+      description: Deletes the section corresponding to the provided ID.
+      parameters:
+      - description: ID of the section to delete
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Deletes a section.
+      tags:
+      - sections
+    get:
+      description: Gets details of a specific section using its ID.
+      parameters:
+      - description: ID of the section item
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Retrieves a specific section.
+      tags:
+      - sections
+    patch:
+      consumes:
+      - application/json
+      description: Updates an existing section based on the provided data.
+      parameters:
+      - description: ID of the section to update
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated section data
+        format: json
+        in: body
+        name: sectionData
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Updates an existing section.
+      tags:
+      - sections
+  /sections/reportProducts:
+    get:
+      description: Gets the total ammount of products stored in a given section. If
+        section is not specified, gets ammount of products for each section.
+      parameters:
+      - description: ID of the specific section
+        in: query
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Gets number of products stored in a section.
+      tags:
+      - sections
+  /seller:
+    get:
+      description: Get all the sellers available or an error if the list is empty
+        or an internal error occurs.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of all sellers
+          schema:
+            items:
+              $ref: '#/definitions/domain.Seller'
+            type: array
+        "404":
+          description: Sellers not found
+          schema:
+            type: string
+        "500":
+          description: Server Internal error
+          schema:
+            type: string
+      summary: Get all the sellers available.
+      tags:
+      - domain.Seller
+    post:
+      consumes:
+      - application/json
+      description: Create a new seller or return an error if the new seller has invalid
+      parameters:
+      - description: Struct of Seller domain
+        in: body
+        name: Seller
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Seller'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: New created seller
+          schema:
+            $ref: '#/definitions/domain.Seller'
+        "409":
+          description: seller already exists
+          schema:
+            type: string
+        "422":
+          description: invalid or missing locality. Locality_id must be 1 or greater
+          schema:
+            type: string
+        "500":
+          description: Server Internal error
+          schema:
+            type: string
+      summary: Create a new seller or return an error if the new seller cannot be
+        created.
+      tags:
+      - domain.Seller
+  /seller/{id}:
+    delete:
+      description: Delete a seller using its id or return an error if that
+      parameters:
+      - description: id from the seller
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: Seller deleted
+          schema:
+            type: string
+        "400":
+          description: id must be 1 or greater
+          schema:
+            type: string
+        "404":
+          description: Seller not found
+          schema:
+            type: string
+        "500":
+          description: Server Internal error
+          schema:
+            type: string
+      summary: Delete seller or return an error otherwise.
+      tags:
+      - domain.Seller
+    get:
+      description: Get a seller by id or an error if that id not exists or an internal
+        error occurs.
+      parameters:
+      - description: id from the seller
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Seller requested
+          schema:
+            $ref: '#/definitions/domain.Seller'
+        "400":
+          description: invalid id
+          schema:
+            type: string
+        "404":
+          description: Seller not found
+          schema:
+            type: string
+        "500":
+          description: Server Internal error
+          schema:
+            type: string
+      summary: Get a seller by id or an error if that id not exists.
+      tags:
+      - domain.Seller
+    patch:
+      consumes:
+      - application/json
+      description: Update a seller or return an error if that seller not exist,
+      parameters:
+      - description: id from the seller
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Struct of Seller domain
+        in: body
+        name: Seller
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Seller'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Seller updated
+          schema:
+            $ref: '#/definitions/domain.Seller'
+        "400":
+          description: invalid id
+          schema:
+            type: string
+        "404":
+          description: Seller not found
+          schema:
+            type: string
+        "500":
+          description: Server Internal error
+          schema:
+            type: string
+      summary: Update seller or return an error otherwise.
+      tags:
+      - domain.Seller
+  /warehouses:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get all the warehouses available.
+      tags:
+      - warehouses
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Warehouse struct
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.Warehouse'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Creates a warehouse, returns error if the warehouse doesn't match the
+        standard input.
+      tags:
+      - warehouses
+  /warehouses/{id}:
+    delete:
+      parameters:
+      - description: Warehouse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete the warehouses by ID, returns error if the warehouse doesn't
+        exists.
+      tags:
+      - warehouses
+    get:
+      parameters:
+      - description: Warehouse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get the warehouses by ID, returns error if the warehouse doesn't exists.
+      tags:
+      - warehouses
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Warehouse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update the warehouses by ID, returns error if the warehouse doesn't
+        exists.
+      tags:
+      - warehouses
+swagger: "2.0"
