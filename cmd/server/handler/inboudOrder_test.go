@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/davidop97/apiGo/internal/domain"
 	inboudorder "github.com/davidop97/apiGo/internal/inboudOrder"
@@ -260,9 +261,11 @@ func TestHandler_CreateInboundOrder(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		//Given
 		var (
+			loc, _               = time.LoadLocation("America/Bogota")
+			currentTime          = time.Now().In(loc).Format("2006-01-02")
 			id                   = 1
 			expectedInboundOrder = domain.InboudOrder{
-				OrderDate:      "2024-02-09",
+				OrderDate:      currentTime,
 				OrderNumber:    "order#1",
 				EmployeeID:     4,
 				ProductBatchID: 1,
@@ -272,8 +275,10 @@ func TestHandler_CreateInboundOrder(t *testing.T) {
 			expectedHeaders    = http.Header{
 				"Content-Type": []string{"application/json; charset=utf-8"},
 			}
-			bodyRequest  = `{"order_date":"2024-02-09","order_number":"order#1","employee_id":4, "product_batch_id":1, "warehouse_id":1}`
-			expectedBody = `{"data":{"id":1,"order_date":"2024-02-09","order_number":"order#1","employee_id":4, "product_batch_id":1, "warehouse_id":1}}`
+			// bodyRequest = fmt.Sprintf(`{"order_date":"%s","order_number":"order#1","employee_id":4, "product_batch_id":1, "warehouse_id":1}`, currentTime)
+			bodyRequest = `{"order_date":"2024-02-09","order_number":"order#1","employee_id":4, "product_batch_id":1, "warehouse_id":1}`
+			// expectedBody = `{"data":{"id":1,"order_date":"2024-02-09","order_number":"order#1","employee_id":4, "product_batch_id":1, "warehouse_id":1}}`
+			expectedBody = fmt.Sprintf(`{"data":{"id":1,"order_date":"%s","order_number":"order#1","employee_id":4, "product_batch_id":1, "warehouse_id":1}}`, currentTime)
 		)
 		service := &inboudorder.ServiceMock{}
 		service.On("CreateInboundOrder", mock.Anything, expectedInboundOrder).Return(id, nil)
@@ -284,10 +289,8 @@ func TestHandler_CreateInboundOrder(t *testing.T) {
 		body := strings.NewReader(bodyRequest)
 		request, _ := http.NewRequest("POST", route, body)
 		response := httptest.NewRecorder()
-
 		//When
 		engine.ServeHTTP(response, request)
-
 		//Then
 		assert.Equal(t, expectedStatusCode, response.Code)
 		assert.Equal(t, expectedHeaders, response.Header())
@@ -319,10 +322,8 @@ func TestHandler_CreateInboundOrder(t *testing.T) {
 		body := strings.NewReader(bodyRequest)
 		request, _ := http.NewRequest("POST", route, body)
 		response := httptest.NewRecorder()
-
 		//When
 		engine.ServeHTTP(response, request)
-
 		//Then
 		assert.Equal(t, expectedStatusCode, response.Code)
 		assert.Equal(t, expectedHeaders, response.Header())
@@ -355,10 +356,8 @@ func TestHandler_CreateInboundOrder(t *testing.T) {
 		body := strings.NewReader(bodyRequest)
 		request, _ := http.NewRequest("POST", route, body)
 		response := httptest.NewRecorder()
-
 		//When
 		engine.ServeHTTP(response, request)
-
 		//Then
 		assert.Equal(t, expectedStatusCode, response.Code)
 		assert.Equal(t, expectedHeaders, response.Header())
@@ -367,9 +366,11 @@ func TestHandler_CreateInboundOrder(t *testing.T) {
 	})
 	t.Run("error_duplicate_inbound_order", func(t *testing.T) {
 		var (
+			loc, _               = time.LoadLocation("America/Bogota")
+			currentTime          = time.Now().In(loc).Format("2006-01-02")
 			id                   = 0
 			expectedInboundOrder = domain.InboudOrder{
-				OrderDate:      "2024-02-09",
+				OrderDate:      currentTime,
 				OrderNumber:    "order#1",
 				EmployeeID:     4,
 				ProductBatchID: 1,
@@ -392,10 +393,8 @@ func TestHandler_CreateInboundOrder(t *testing.T) {
 		body := strings.NewReader(bodyRequest)
 		request, _ := http.NewRequest("POST", route, body)
 		response := httptest.NewRecorder()
-
 		//When
 		engine.ServeHTTP(response, request)
-
 		//Then
 		assert.Equal(t, expectedStatusCode, response.Code)
 		assert.Equal(t, expectedHeaders, response.Header())
@@ -404,9 +403,11 @@ func TestHandler_CreateInboundOrder(t *testing.T) {
 	})
 	t.Run("error_employee_does_not_exists", func(t *testing.T) {
 		var (
+			loc, _               = time.LoadLocation("America/Bogota")
+			currentTime          = time.Now().In(loc).Format("2006-01-02")
 			id                   = 0
 			expectedInboundOrder = domain.InboudOrder{
-				OrderDate:      "2024-02-09",
+				OrderDate:      currentTime,
 				OrderNumber:    "order#1",
 				EmployeeID:     4,
 				ProductBatchID: 1,
@@ -429,10 +430,8 @@ func TestHandler_CreateInboundOrder(t *testing.T) {
 		body := strings.NewReader(bodyRequest)
 		request, _ := http.NewRequest("POST", route, body)
 		response := httptest.NewRecorder()
-
 		//When
 		engine.ServeHTTP(response, request)
-
 		//Then
 		assert.Equal(t, expectedStatusCode, response.Code)
 		assert.Equal(t, expectedHeaders, response.Header())
@@ -441,9 +440,11 @@ func TestHandler_CreateInboundOrder(t *testing.T) {
 	})
 	t.Run("error_warehouse_does_not_exists", func(t *testing.T) {
 		var (
+			loc, _               = time.LoadLocation("America/Bogota")
+			currentTime          = time.Now().In(loc).Format("2006-01-02")
 			id                   = 0
 			expectedInboundOrder = domain.InboudOrder{
-				OrderDate:      "2024-02-09",
+				OrderDate:      currentTime,
 				OrderNumber:    "order#1",
 				EmployeeID:     4,
 				ProductBatchID: 1,
@@ -466,10 +467,8 @@ func TestHandler_CreateInboundOrder(t *testing.T) {
 		body := strings.NewReader(bodyRequest)
 		request, _ := http.NewRequest("POST", route, body)
 		response := httptest.NewRecorder()
-
 		//When
 		engine.ServeHTTP(response, request)
-
 		//Then
 		assert.Equal(t, expectedStatusCode, response.Code)
 		assert.Equal(t, expectedHeaders, response.Header())
